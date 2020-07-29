@@ -6,6 +6,7 @@ import java.awt.event.WindowEvent;
  * Created by mok on 2020/7/29.
  */
 public class TrankFrame extends Frame {
+    int x = 200, y = 200;
     public TrankFrame() {
         setSize(800, 600);
         setResizable(false);
@@ -26,6 +27,9 @@ public class TrankFrame extends Frame {
      */
     @Override
     public void paint(Graphics g) {
-        g.fillRect(200, 200, 50, 50);
+        System.out.println("print");
+        g.fillRect(x, y, 50, 50);
+        x += 100;
+        y += 100;
     }
 }
