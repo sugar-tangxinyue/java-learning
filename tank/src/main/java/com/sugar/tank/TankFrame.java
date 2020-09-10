@@ -62,7 +62,7 @@ public class TankFrame extends Frame {
         boolean bD = false;
 
         @Override
-        public void keyReleased(KeyEvent e) {
+        public void keyPressed(KeyEvent e) {
             int key = e.getKeyCode();
             switch (key) {
                 case KeyEvent.VK_LEFT:
@@ -84,14 +84,19 @@ public class TankFrame extends Frame {
         }
 
         private void setMainTankDir() {
-            if (bL) tank.setDir(Dir.LEFT);
-            if (bU) tank.setDir(Dir.UP);
-            if (bR) tank.setDir(Dir.RIGHT);
-            if (bD) tank.setDir(Dir.DOWM);
+            if (!bL && !bU && !bR && !bD) {
+                tank.setMoving(false);
+            }else {
+                tank.setMoving(true);
+                if (bL) tank.setDir(Dir.LEFT);
+                if (bU) tank.setDir(Dir.UP);
+                if (bR) tank.setDir(Dir.RIGHT);
+                if (bD) tank.setDir(Dir.DOWM);
+            }
         }
 
         @Override
-        public void keyPressed(KeyEvent e) {
+        public void keyReleased(KeyEvent e) {
             int key = e.getKeyCode();
             switch (key) {
                 case KeyEvent.VK_LEFT:

@@ -8,6 +8,7 @@ public class Tank {
     private int x;
     private int y;
     private Dir dir=Dir.DOWM;
+    private boolean moving=false;
     private static final int SPEED = 10;
 
     public Tank(int x, int y, Dir dir) {
@@ -40,8 +41,25 @@ public class Tank {
         this.dir = dir;
     }
 
+    public boolean isMoving() {
+        return moving;
+    }
+
+    public void setMoving(boolean moving) {
+        this.moving = moving;
+    }
+
     public void paint(Graphics g) {
         g.fillRect(x, y, 50, 50);
+
+        move();
+
+    }
+
+    private void move() {
+        if(!moving){
+            return;
+        }
         switch (dir) {
             case UP:
                 y -= SPEED;
