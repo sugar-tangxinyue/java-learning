@@ -4,15 +4,19 @@ import com.mashibing.tank.Dir;
 
 import java.awt.*;
 
+/**
+ * 子弹类
+ */
 public class Bullet {
 
+    //速度
     private static final int SPEED=10;
 
+    //高度，宽度
     private static final int WIDTH=5,HEIGHT=5;
 
-
     private int x,y;
-
+    //方向
     private Dir dir;
 
     public Bullet() {
@@ -49,6 +53,10 @@ public class Bullet {
     }
 
 
+    /**
+     * 画出子弹，设置属性
+     * @param g
+     */
     public void paint(Graphics g) {
         Color color=g.getColor();
         g.setColor(Color.RED);
@@ -57,6 +65,9 @@ public class Bullet {
         move();
     }
 
+    /**
+     * 移动方向
+     */
     private void move() {
         switch (dir) {
             case UP:

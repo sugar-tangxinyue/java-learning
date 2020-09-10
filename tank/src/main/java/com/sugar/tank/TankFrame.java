@@ -16,10 +16,11 @@ public class TankFrame extends Frame {
     Tank tank = new Tank(200, 200, Dir.DOWM);
     Bullet bullet=new Bullet(300,300,Dir.DOWM);
 
+    //高度，宽度
+    private static final int GAME_WIDTH=800,GAME_HEIGHT=600;
 
     public TankFrame() {
-
-        setSize(800, 600);
+        setSize(GAME_WIDTH, GAME_HEIGHT);
         //是否能改变大小
         setResizable(false);
         setTitle("tank war");
@@ -33,23 +34,23 @@ public class TankFrame extends Frame {
         });
     }
 
-    public static void main(String[] args) {
-        test01();
+    //解决双缓冲问题
+    Image offScreenImage=null;
+    @Override
+    public void update(Graphics g) {
+        if(null==offScreenImage){
+            offScreenImage=this.createImage(GAME_WIDTH,GAME_HEIGHT);
+        }
+        Graphics gOffScreen=offScreenImage.getGraphics();
+        Color color=gOffScreen.getColor();
+        gOffScreen.setColor(Color.BLACK);
+        gOffScreen.fillRect(0,0,GAME_WIDTH,GAME_HEIGHT);
+        gOffScreen.setColor(color);
+        paint(g);
+        g.drawImage(offScreenImage,0,0,null);
     }
 
-    //隔5秒刷新一下窗口中方块的位置
-    //repaint自动调用刷新窗口
-    public static void test01() {
-        TankFrame f = new TankFrame();
-        while (true) {
-            try {
-                Thread.sleep(50);
-            } catch (InterruptedException e) {
-                System.out.println(e.getCause());
-            }
-            f.repaint();
-        }
-    }
+
 
     @Override
     public void paint(Graphics g) {
