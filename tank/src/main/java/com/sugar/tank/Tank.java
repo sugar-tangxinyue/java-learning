@@ -10,11 +10,13 @@ public class Tank {
     private Dir dir=Dir.DOWM;
     private boolean moving=false;
     private static final int SPEED = 5;
+    private TankFrame tankFrame;
 
-    public Tank(int x, int y, Dir dir) {
+    public Tank(int x, int y, Dir dir,TankFrame tankFrame) {
         this.x = x;
         this.y = y;
         this.dir = dir;
+        this.tankFrame=tankFrame;
     }
 
     public int getX() {
@@ -78,5 +80,9 @@ public class Tank {
             default:
                 break;
         }
+    }
+
+    public void fire() {
+        tankFrame.bullet=new Bullet(this.x,this.y,this.dir);
     }
 }

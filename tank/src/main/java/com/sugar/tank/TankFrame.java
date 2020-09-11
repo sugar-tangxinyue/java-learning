@@ -13,7 +13,7 @@ import java.awt.event.WindowEvent;
  */
 public class TankFrame extends Frame {
 
-    Tank tank = new Tank(200, 200, Dir.DOWM);
+    Tank tank = new Tank(200, 200, Dir.DOWM,this);
     Bullet bullet=new Bullet(300,300,Dir.DOWM);
 
     //高度，宽度
@@ -114,6 +114,8 @@ public class TankFrame extends Frame {
                 case KeyEvent.VK_DOWN:
                     bD = false;
                     break;
+                case KeyEvent.VK_SPACE:
+                    tank.fire();
                 default:
                     break;
             }
