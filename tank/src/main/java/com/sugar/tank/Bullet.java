@@ -10,22 +10,28 @@ import java.awt.*;
 public class Bullet {
 
     //速度
-    private static final int SPEED=10;
+    private static final int SPEED = 10;
 
     //高度，宽度
-    private static final int WIDTH=5,HEIGHT=5;
+    private static final int WIDTH = 5, HEIGHT = 5;
 
-    private int x,y;
+    private int x, y;
     //方向
     private Dir dir;
+
+
+    private boolean isAlive = true;
+
+    private TankFrame tankFrame;
 
     public Bullet() {
     }
 
-    public Bullet(int x, int y, Dir dir) {
+    public Bullet(int x, int y, Dir dir,TankFrame tankFrame) {
         this.x = x;
         this.y = y;
         this.dir = dir;
+        this.tankFrame = tankFrame;
     }
 
     public int getX() {
@@ -55,12 +61,16 @@ public class Bullet {
 
     /**
      * 画出子弹，设置属性
+     *
      * @param g
      */
     public void paint(Graphics g) {
-        Color color=g.getColor();
+        if(!isAlive){
+            tankFrame.bulletList.remove(this);
+        }
+        Color color = g.getColor();
         g.setColor(Color.RED);
-        g.fillOval(x,y,WIDTH,HEIGHT);
+        g.fillOval(x, y, WIDTH, HEIGHT);
         g.setColor(color);
         move();
     }
@@ -84,6 +94,9 @@ public class Bullet {
                 break;
             default:
                 break;
+        }
+        if (x < 0 || y < 0 || x > TankFrame.GAME_WIDTH || y > TankFrame.GAME_HEIGHT) {
+            isAlive = false;
         }
     }
 }

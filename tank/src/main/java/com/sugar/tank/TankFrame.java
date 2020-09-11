@@ -7,6 +7,8 @@ import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * 继承Frame,重写paint方法，在画布上画出黑色方块
@@ -14,10 +16,11 @@ import java.awt.event.WindowEvent;
 public class TankFrame extends Frame {
 
     Tank tank = new Tank(200, 200, Dir.DOWM,this);
-    Bullet bullet=new Bullet(300,300,Dir.DOWM);
+    Bullet bullet=new Bullet(300,300,Dir.DOWM,this);
+    List<Bullet> bulletList=new ArrayList<Bullet>();
 
     //高度，宽度
-    private static final int GAME_WIDTH=800,GAME_HEIGHT=600;
+    public static final int GAME_WIDTH=800,GAME_HEIGHT=600;
 
     public TankFrame() {
         setSize(GAME_WIDTH, GAME_HEIGHT);
@@ -35,27 +38,34 @@ public class TankFrame extends Frame {
     }
 
     //解决双缓冲问题
-    Image offScreenImage=null;
+    Image offScreenImage = null;
+
     @Override
     public void update(Graphics g) {
-        if(null==offScreenImage){
-            offScreenImage=this.createImage(GAME_WIDTH,GAME_HEIGHT);
+        if (offScreenImage == null) {
+            offScreenImage = this.createImage(GAME_WIDTH, GAME_HEIGHT);
         }
-        Graphics gOffScreen=offScreenImage.getGraphics();
-        Color color=gOffScreen.getColor();
+        Graphics gOffScreen = offScreenImage.getGraphics();
+        Color c = gOffScreen.getColor();
         gOffScreen.setColor(Color.BLACK);
-        gOffScreen.fillRect(0,0,GAME_WIDTH,GAME_HEIGHT);
-        gOffScreen.setColor(color);
-        paint(g);
-        g.drawImage(offScreenImage,0,0,null);
+        gOffScreen.fillRect(0, 0, GAME_WIDTH, GAME_HEIGHT);
+        gOffScreen.setColor(c);
+        paint(gOffScreen);
+        g.drawImage(offScreenImage, 0, 0, null);
     }
 
 
 
     @Override
     public void paint(Graphics g) {
+        Color c = g.getColor();
+        g.setColor(Color.WHITE);
+        g.drawString("子弹的数目："+bulletList.size(),10,60);
+        g.setColor(c);
         tank.paint(g);
-        bullet.paint(g);
+        for (int i = 0; i < bulletList.size(); i++) {
+            bulletList.get(i).paint(g);
+        }
     }
 
     class MykeyListener extends KeyAdapter {
