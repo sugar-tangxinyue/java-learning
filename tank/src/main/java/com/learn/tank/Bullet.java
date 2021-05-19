@@ -4,21 +4,27 @@ import java.awt.*;
 
 public class Bullet {
     private int x;
-    private int y ;
-    private Dir dir =Dir.DOWN;
+    private int y;
+    private Dir dir = Dir.DOWN;
     //不能被改变，用final
     private static final int SPEED = 5;
     private static final int WIDTH = 20;
     private static final int HEIGHT = 20;
+    private boolean live = true;
+    private TankFrame tankFrame;
 
-    public Bullet(int x, int y, Dir dir) {
+    public Bullet(int x, int y, Dir dir,TankFrame tankFrame) {
         this.x = x;
         this.y = y;
         this.dir = dir;
+        this.tankFrame=tankFrame;
     }
 
     public void paint(Graphics g) {
-        Color c=g.getColor();
+        if(!live){
+            tankFrame.bulletList.remove(this);
+        }
+        Color c = g.getColor();
         g.setColor(Color.RED);
         g.fillOval(x, y, WIDTH, HEIGHT);
         g.setColor(c);
@@ -39,7 +45,11 @@ public class Bullet {
             case DOWN:
                 y += SPEED;
                 break;
-            default:break;
+            default:
+                break;
+        }
+        if (x < 0 || y < 0 || x > TankFrame.GAME_WIDTH || y > TankFrame.GAME_HEIGHT) {
+            this.live=false;
         }
     }
 

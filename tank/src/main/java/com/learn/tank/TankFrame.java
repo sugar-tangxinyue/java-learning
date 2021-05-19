@@ -5,17 +5,21 @@ import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.util.ArrayList;
+import java.util.List;
 
 public class TankFrame extends Frame {
+    public static final int GAME_WIDTH = 800;
+    public static final int GAME_HEIGHT = 600;
 
-    Tank myTank = new Tank(200, 200, null);
+    Tank myTank = new Tank(200, 200, Dir.DOWN, this);
+    List<Bullet> bulletList=new ArrayList<>();
 
-    Bullet bullet=new Bullet(200,200,Dir.DOWN);
     public TankFrame() {
         //设置窗口可见
         setVisible(true);
         //设置窗口大小
-        setSize(800, 600);
+        setSize(GAME_WIDTH, GAME_HEIGHT);
         //是否可以改变大小
         setResizable(false);
         setTitle("tank war");
@@ -33,7 +37,29 @@ public class TankFrame extends Frame {
     @Override
     public void paint(Graphics g) {
         myTank.paint(g);
-        bullet.paint(g);
+        for (int i = 0; i < bulletList.size(); i++) {
+            bulletList.get(i).paint(g);
+        }
+    }
+
+    /**
+     * 双缓冲解决画面闪烁的问题
+     * 首先把画出来的东西，画在内存中的图片中，图片大小和页面大小一致
+     */
+    Image offScreenImage = null;
+
+    @Override
+    public void update(Graphics g) {
+        if (offScreenImage == null) {
+            offScreenImage = this.createImage(GAME_WIDTH, GAME_HEIGHT);
+        }
+        Graphics gOffSceen = offScreenImage.getGraphics();
+        Color c = gOffSceen.getColor();
+        gOffSceen.setColor(Color.BLACK);
+        gOffSceen.fillRect(0, 0, GAME_WIDTH, GAME_HEIGHT);
+        gOffSceen.setColor(c);
+        paint(gOffSceen);
+        g.drawImage(offScreenImage, 0, 0, null);
     }
 
     class MyKeyListener extends KeyAdapter {
@@ -81,6 +107,9 @@ public class TankFrame extends Frame {
                     break;
                 case KeyEvent.VK_DOWN:
                     bD = false;
+                    break;
+                case KeyEvent.VK_CONTROL:
+                    myTank.fire();
                     break;
                 default:
                     break;

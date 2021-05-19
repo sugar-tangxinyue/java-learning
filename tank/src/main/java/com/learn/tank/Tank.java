@@ -4,25 +4,32 @@ import java.awt.*;
 
 public class Tank {
     private int x;
-    private int y ;
-    private Dir dir =Dir.DOWN;
-    private boolean moving=false;
+    private int y;
+    private Dir dir = Dir.DOWN;
+    private boolean moving = false;
+    private TankFrame tankFrame;
     //不能被改变，用final
     private static final int SPEED = 5;
+    private static final int WIDTH = 30;
+    private static final int HEIGHT = 30;
 
-    public Tank(int x, int y, Dir dir) {
+    public Tank(int x, int y, Dir dir, TankFrame tankFrame) {
         this.x = x;
         this.y = y;
         this.dir = dir;
+        this.tankFrame = tankFrame;
     }
 
     public void paint(Graphics g) {
-        g.fillRect(x, y, 50, 50);
+        Color c = g.getColor();
+        g.setColor(Color.YELLOW);
+        g.fillRect(x, y, WIDTH, HEIGHT);
+        g.setColor(c);
         move();
     }
 
     private void move() {
-        if(!moving){
+        if (!moving) {
             return;
         }
         switch (dir) {
@@ -38,7 +45,8 @@ public class Tank {
             case DOWN:
                 y += SPEED;
                 break;
-            default:break;
+            default:
+                break;
         }
     }
 
@@ -72,5 +80,9 @@ public class Tank {
 
     public void setMoving(boolean moving) {
         this.moving = moving;
+    }
+
+    public void fire() {
+        tankFrame.bulletList.add(new Bullet(this.x, this.y, this.dir,this.tankFrame));
     }
 }
