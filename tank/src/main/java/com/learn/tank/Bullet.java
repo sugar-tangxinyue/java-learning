@@ -6,18 +6,22 @@ public class Bullet {
     private int x;
     private int y;
     private Dir dir = Dir.DOWN;
+    private Group group;
     //不能被改变，用final
-    private static final int SPEED = 5;
+    private static final int SPEED = 2;
     public static final int WIDTH = ResourceMgr.bulletD.getWidth();
     public static final int HEIGHT = ResourceMgr.bulletD.getHeight();
     private boolean living = true;
     private TankFrame tankFrame;
+    private Rectangle rectangle;
 
-    public Bullet(int x, int y, Dir dir, TankFrame tankFrame) {
+    public Bullet(int x, int y, Dir dir,Group group, TankFrame tankFrame) {
         this.x = x;
         this.y = y;
         this.dir = dir;
+        this.group = group;
         this.tankFrame = tankFrame;
+        this.rectangle=new Rectangle(this.x, this.y, WIDTH, HEIGHT);
     }
 
     public void paint(Graphics g) {
@@ -64,6 +68,8 @@ public class Bullet {
         }
         if (x < 0 || y < 0 || x > TankFrame.GAME_WIDTH || y > TankFrame.GAME_HEIGHT) {
             this.living = false;
+        }else {
+            rectangle=new Rectangle(this.x, this.y, WIDTH, HEIGHT);
         }
     }
 
@@ -91,15 +97,32 @@ public class Bullet {
         this.dir = dir;
     }
 
+    public Group getGroup() {
+        return group;
+    }
+
+    public void setGroup(Group group) {
+        this.group = group;
+    }
+
+    public Rectangle getRectangle() {
+        return rectangle;
+    }
+
+    public void setRectangle(Rectangle rectangle) {
+        this.rectangle = rectangle;
+    }
+
     /**
      * 坦克是否跟子弹相撞
      *
      * @param tank
      */
     public void collideWith(Tank tank) {
-        Rectangle rectBuellet = new Rectangle(this.x, this.y, WIDTH, HEIGHT);
-        Rectangle rectTank = new Rectangle(tank.getX(), tank.getX(), Tank.WIDTH, Tank.HEIGHT);
-        if (rectBuellet.intersects(rectTank)) {
+        if(this.group==tank.getGroup()){
+            return;
+        }
+        if (this.rectangle.intersects(tank.getRectangle())) {
             tank.die();
             this.die();
         }

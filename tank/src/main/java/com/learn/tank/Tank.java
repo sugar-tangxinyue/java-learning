@@ -1,24 +1,31 @@
 package com.learn.tank;
 
 import java.awt.*;
+import java.util.Random;
 
 public class Tank {
     private int x;
     private int y;
     private Dir dir = Dir.DOWN;
-    private boolean moving = false;
+    private Group group;
+    private boolean moving = true;
     private boolean living = true;
     private TankFrame tankFrame;
     //不能被改变，用final
-    private static final int SPEED = 5;
+    private static final int SPEED = 2;
     public static final int WIDTH = ResourceMgr.tankD.getWidth();
     public static final int HEIGHT = ResourceMgr.tankD.getWidth();
+    private Rectangle rectangle;
 
-    public Tank(int x, int y, Dir dir, TankFrame tankFrame) {
+    private Random random=new Random();
+
+    public Tank(int x, int y, Dir dir,Group group, TankFrame tankFrame) {
         this.x = x;
         this.y = y;
         this.dir = dir;
+        this.group=group;
         this.tankFrame = tankFrame;
+        this.rectangle=new Rectangle(this.x, this.y, WIDTH, HEIGHT);
     }
 
     public void paint(Graphics g) {
@@ -69,6 +76,10 @@ public class Tank {
             default:
                 break;
         }
+        if(random.nextInt(10)>8){
+            this.fire();
+        }
+        this.rectangle=new Rectangle(this.x, this.y, WIDTH, HEIGHT);
     }
 
     public int getX() {
@@ -103,13 +114,28 @@ public class Tank {
         this.moving = moving;
     }
 
+    public Group getGroup() {
+        return group;
+    }
+
+    public void setGroup(Group group) {
+        this.group = group;
+    }
+
+    public Rectangle getRectangle() {
+        return rectangle;
+    }
+
+    public void setRectangle(Rectangle rectangle) {
+        this.rectangle = rectangle;
+    }
     /**
      * 坦克打出子弹
      */
     public void fire() {
         int bX = this.x + Tank.WIDTH / 2 - Bullet.WIDTH / 2;
         int bY = this.y + Tank.HEIGHT / 2 - Bullet.HEIGHT / 2;
-        tankFrame.bulletList.add(new Bullet(bX, bY, this.dir, this.tankFrame));
+        tankFrame.bulletList.add(new Bullet(bX, bY, this.dir,this.group, this.tankFrame));
     }
 
     /**
