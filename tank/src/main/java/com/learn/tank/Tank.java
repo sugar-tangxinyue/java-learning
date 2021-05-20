@@ -7,11 +7,12 @@ public class Tank {
     private int y;
     private Dir dir = Dir.DOWN;
     private boolean moving = false;
+    private boolean living = true;
     private TankFrame tankFrame;
     //不能被改变，用final
     private static final int SPEED = 5;
-    private static final int WIDTH = 30;
-    private static final int HEIGHT = 30;
+    public static final int WIDTH = ResourceMgr.tankD.getWidth();
+    public static final int HEIGHT = ResourceMgr.tankD.getWidth();
 
     public Tank(int x, int y, Dir dir, TankFrame tankFrame) {
         this.x = x;
@@ -21,13 +22,33 @@ public class Tank {
     }
 
     public void paint(Graphics g) {
-        Color c = g.getColor();
-        g.setColor(Color.YELLOW);
-        g.fillRect(x, y, WIDTH, HEIGHT);
-        g.setColor(c);
+        if (!living) {
+            tankFrame.tankList.remove(this);
+        }
+        Image image = null;
+        switch (dir) {
+            case LEFT:
+                image = ResourceMgr.tankL;
+                break;
+            case UP:
+                image = ResourceMgr.tankU;
+                break;
+            case RIGHT:
+                image = ResourceMgr.tankR;
+                break;
+            case DOWN:
+                image = ResourceMgr.tankD;
+                break;
+            default:
+                break;
+        }
+        g.drawImage(image, x, y, null);
         move();
     }
 
+    /**
+     * 子弹移动
+     */
     private void move() {
         if (!moving) {
             return;
@@ -82,7 +103,19 @@ public class Tank {
         this.moving = moving;
     }
 
+    /**
+     * 坦克打出子弹
+     */
     public void fire() {
-        tankFrame.bulletList.add(new Bullet(this.x, this.y, this.dir,this.tankFrame));
+        int bX = this.x + Tank.WIDTH / 2 - Bullet.WIDTH / 2;
+        int bY = this.y + Tank.HEIGHT / 2 - Bullet.HEIGHT / 2;
+        tankFrame.bulletList.add(new Bullet(bX, bY, this.dir, this.tankFrame));
+    }
+
+    /**
+     * 坦克消失
+     */
+    public void die() {
+        this.living = false;
     }
 }
