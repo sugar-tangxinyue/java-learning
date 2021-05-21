@@ -97,26 +97,8 @@ public class Tank {
             dir=Dir.UP;
             return;
         }
-        int i = random.nextInt(100);
-        if(i<50){
-            return;
-        }
-        int dirQY = i % 4;
-        switch (dirQY) {
-            case 0:
-                this.dir = Dir.UP;
-                return;
-            case 1:
-                this.dir = Dir.DOWN;
-                return;
-            case 2:
-                this.dir = Dir.LEFT;
-                return;
-            case 3:
-                this.dir = Dir.RIGHT;
-                return;
-            default:
-                return;
+        if(random.nextInt(100)>95){
+            this.dir = Dir.values()[random.nextInt(4)];
         }
     }
 

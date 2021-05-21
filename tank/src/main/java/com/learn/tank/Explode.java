@@ -7,6 +7,8 @@ public class Explode {
     private int x;
     private int y;
     public TankFrame tankFrame;
+    public static int WIDTH = ResourceMgr.explodes[0].getWidth();
+    public static int HEIGHT = ResourceMgr.explodes[0].getHeight();
     private int step;
 
 
@@ -18,7 +20,7 @@ public class Explode {
     }
 
     public void paint(Graphics g) {
-        if(step>15){
+        if(step>ResourceMgr.explodes.length){
             tankFrame.explodeList.remove(this);
             return;
         }

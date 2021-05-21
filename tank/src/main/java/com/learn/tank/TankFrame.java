@@ -38,22 +38,27 @@ public class TankFrame extends Frame {
     //坦克坐标变成变量，可以动起来
     @Override
     public void paint(Graphics g) {
+        //画坦克
         myTank.paint(g);
+        //画出子弹
         for (int i = 0; i < bulletList.size(); i++) {
             bulletList.get(i).paint(g);
         }
+        //画出敌方坦克
         for (int i = 0; i < tankList.size(); i++) {
             tankList.get(i).paint(g);
         }
+        //碰撞
         for (int i = 0; i < bulletList.size(); i++) {
             for (int j = 0; j < tankList.size(); j++) {
                 Tank tankJ = tankList.get(j);
                 boolean isHit = bulletList.get(i).collideWith(tankJ);
                 if (isHit) {
-                    explodeList.add(new Explode(tankJ.getX() + Tank.WIDTH / 2, tankJ.getY() + Tank.HEIGHT / 2, this));
+                    explodeList.add(new Explode(tankJ.getX() + Tank.WIDTH / 2-Explode.WIDTH/2, tankJ.getY() + Tank.WIDTH / 2-Explode.WIDTH/2, this));
                 }
             }
         }
+        //画出爆炸
         for (int i = 0; i < explodeList.size(); i++) {
             explodeList.get(i).paint(g);
         }
