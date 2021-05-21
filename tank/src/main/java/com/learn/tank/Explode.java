@@ -20,7 +20,7 @@ public class Explode {
     }
 
     public void paint(Graphics g) {
-        if(step>ResourceMgr.explodes.length){
+        if (step >= ResourceMgr.explodes.length) {
             tankFrame.explodeList.remove(this);
             return;
         }

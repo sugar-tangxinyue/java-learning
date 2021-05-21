@@ -15,17 +15,20 @@ public class Tank {
     private static final int SPEED = 5;
     public static final int WIDTH = ResourceMgr.goodTankD.getWidth();
     public static final int HEIGHT = ResourceMgr.goodTankD.getWidth();
-    private Rectangle rectangle;
+    private Rectangle rectangle = new Rectangle();
 
-    private Random random=new Random();
+    private Random random = new Random();
 
-    public Tank(int x, int y, Dir dir,Group group, TankFrame tankFrame) {
+    public Tank(int x, int y, Dir dir, Group group, TankFrame tankFrame) {
         this.x = x;
         this.y = y;
         this.dir = dir;
-        this.group=group;
+        this.group = group;
         this.tankFrame = tankFrame;
-        this.rectangle=new Rectangle(this.x, this.y, WIDTH, HEIGHT);
+        this.rectangle.x = this.x;
+        this.rectangle.y = this.y;
+        this.rectangle.width = WIDTH;
+        this.rectangle.height = this.HEIGHT;
     }
 
     public void paint(Graphics g) {
@@ -40,20 +43,21 @@ public class Tank {
 
     /**
      * 获取图片
+     *
      * @return
      */
     private Image getImage() {
-        switch (group){
+        switch (group) {
             case BAD:
                 switch (dir) {
                     case LEFT:
                         return ResourceMgr.badTankL;
                     case UP:
-                        return  ResourceMgr.badTankU;
+                        return ResourceMgr.badTankU;
                     case RIGHT:
-                        return  ResourceMgr.badTankR;
+                        return ResourceMgr.badTankR;
                     case DOWN:
-                        return  ResourceMgr.badTankD;
+                        return ResourceMgr.badTankD;
                     default:
                         return null;
                 }
@@ -62,15 +66,16 @@ public class Tank {
                     case LEFT:
                         return ResourceMgr.goodTankL;
                     case UP:
-                        return  ResourceMgr.goodTankU;
+                        return ResourceMgr.goodTankU;
                     case RIGHT:
-                        return  ResourceMgr.goodTankR;
+                        return ResourceMgr.goodTankR;
                     case DOWN:
-                        return  ResourceMgr.goodTankD;
+                        return ResourceMgr.goodTankD;
                     default:
                         return null;
                 }
-            default:return null;
+            default:
+                return null;
         }
     }
 
@@ -78,26 +83,10 @@ public class Tank {
      * 敌机生成随机方向,如果即将超出边界，反方向运行
      */
     private void randomDir() {
-        if(this.group==Group.GOOD){
-           return;
-        }
-        if(x<=SPEED+Tank.HEIGHT){
-            dir=Dir.RIGHT;
+        if (this.group == Group.GOOD) {
             return;
         }
-        if(x>=TankFrame.GAME_WIDTH-SPEED-Tank.HEIGHT){
-            dir=Dir.LEFT;
-            return;
-        }
-        if(y<=SPEED+Tank.WIDTH){
-            dir=Dir.DOWN;
-            return;
-        }
-        if(y>=TankFrame.GAME_HEIGHT-SPEED-Tank.WIDTH){
-            dir=Dir.UP;
-            return;
-        }
-        if(random.nextInt(100)>95){
+        if (random.nextInt(100) > 95) {
             this.dir = Dir.values()[random.nextInt(4)];
         }
     }
@@ -125,12 +114,20 @@ public class Tank {
             default:
                 break;
         }
-        if(this.group==Group.BAD){
-            if(random.nextInt(10)>8){
-                this.fire();
-            }
+        if (this.group == Group.BAD && random.nextInt(10) > 8) {
+            this.fire();
         }
-        this.rectangle=new Rectangle(this.x, this.y, WIDTH, HEIGHT);
+        //边界检测
+        boundsCheck();
+        rectangle.x = x;
+        rectangle.y = y;
+    }
+
+    private void boundsCheck() {
+        if (x < 2) x = 2;
+        if (y < 28) y = 28;
+        if (x > TankFrame.GAME_WIDTH - Tank.WIDTH - 2) x = TankFrame.GAME_WIDTH - Tank.WIDTH - 2;
+        if (y > TankFrame.GAME_HEIGHT - Tank.HEIGHT - 2) y = TankFrame.GAME_HEIGHT - Tank.HEIGHT - 2;
     }
 
     public int getX() {
@@ -180,13 +177,14 @@ public class Tank {
     public void setRectangle(Rectangle rectangle) {
         this.rectangle = rectangle;
     }
+
     /**
      * 坦克打出子弹
      */
     public void fire() {
         int bX = this.x + Tank.WIDTH / 2 - Bullet.WIDTH / 2;
         int bY = this.y + Tank.HEIGHT / 2 - Bullet.HEIGHT / 2;
-        tankFrame.bulletList.add(new Bullet(bX, bY, this.dir,this.group, this.tankFrame));
+        tankFrame.bulletList.add(new Bullet(bX, bY, this.dir, this.group, this.tankFrame));
     }
 
     /**

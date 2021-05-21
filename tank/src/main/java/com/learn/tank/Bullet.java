@@ -13,15 +13,18 @@ public class Bullet {
     public static final int HEIGHT = ResourceMgr.bulletD.getHeight();
     private boolean living = true;
     private TankFrame tankFrame;
-    private Rectangle rectangle;
+    private Rectangle rectangle = new Rectangle();
 
-    public Bullet(int x, int y, Dir dir,Group group, TankFrame tankFrame) {
+    public Bullet(int x, int y, Dir dir, Group group, TankFrame tankFrame) {
         this.x = x;
         this.y = y;
         this.dir = dir;
         this.group = group;
         this.tankFrame = tankFrame;
-        this.rectangle=new Rectangle(this.x, this.y, WIDTH, HEIGHT);
+        this.rectangle.x = this.x;
+        this.rectangle.y = this.y;
+        this.rectangle.width = WIDTH;
+        this.rectangle.height = this.HEIGHT;
     }
 
     public void paint(Graphics g) {
@@ -68,8 +71,9 @@ public class Bullet {
         }
         if (x < 0 || y < 0 || x > TankFrame.GAME_WIDTH || y > TankFrame.GAME_HEIGHT) {
             this.living = false;
-        }else {
-            rectangle=new Rectangle(this.x, this.y, WIDTH, HEIGHT);
+        } else {
+            rectangle.x = x;
+            rectangle.y = y;
         }
     }
 
@@ -119,7 +123,7 @@ public class Bullet {
      * @param tank
      */
     public boolean collideWith(Tank tank) {
-        if(this.group==tank.getGroup()){
+        if (this.group == tank.getGroup()) {
             return false;
         }
         if (this.rectangle.intersects(tank.getRectangle())) {

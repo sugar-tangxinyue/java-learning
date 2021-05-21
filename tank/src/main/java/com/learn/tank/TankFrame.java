@@ -38,6 +38,12 @@ public class TankFrame extends Frame {
     //坦克坐标变成变量，可以动起来
     @Override
     public void paint(Graphics g) {
+        Color c = g.getColor();
+        g.setColor(Color.WHITE);
+        g.drawString("bullets:" + bulletList.size(), 10, 60);
+        g.drawString("tanks:" + tankList.size(), 10, 80);
+        g.drawString("explodes" + explodeList.size(), 10, 100);
+        g.setColor(c);
         //画坦克
         myTank.paint(g);
         //画出子弹
@@ -54,7 +60,7 @@ public class TankFrame extends Frame {
                 Tank tankJ = tankList.get(j);
                 boolean isHit = bulletList.get(i).collideWith(tankJ);
                 if (isHit) {
-                    explodeList.add(new Explode(tankJ.getX() + Tank.WIDTH / 2-Explode.WIDTH/2, tankJ.getY() + Tank.WIDTH / 2-Explode.WIDTH/2, this));
+                    explodeList.add(new Explode(tankJ.getX() + Tank.WIDTH / 2 - Explode.WIDTH / 2, tankJ.getY() + Tank.WIDTH / 2 - Explode.WIDTH / 2, this));
                 }
             }
         }
