@@ -8,13 +8,13 @@ import java.util.Properties;
  */
 public class PropertyMgr {
 
-    private PropertyMgr propertyMgr = new PropertyMgr();
+    private static final PropertyMgr INSTANCE = new PropertyMgr();
 
     private PropertyMgr() {
     }
 
-    public PropertyMgr getInstanse() {
-        return propertyMgr;
+    public PropertyMgr getInstance() {
+        return INSTANCE;
     }
 
     static Properties props = new Properties();
