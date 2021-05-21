@@ -9,8 +9,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class TankFrame extends Frame {
-    public static final int GAME_WIDTH = 800;
-    public static final int GAME_HEIGHT = 600;
+    public static final int GAME_WIDTH = 1200;
+    public static final int GAME_HEIGHT = 900;
 
     Tank myTank = new Tank(200, 400, Dir.DOWN, Group.GOOD, this);
     List<Bullet> bulletList = new ArrayList<>();
@@ -60,7 +60,7 @@ public class TankFrame extends Frame {
                 Tank tankJ = tankList.get(j);
                 boolean isHit = bulletList.get(i).collideWith(tankJ);
                 if (isHit) {
-                    explodeList.add(new Explode(tankJ.getX() + Tank.WIDTH / 2 - Explode.WIDTH / 2, tankJ.getY() + Tank.WIDTH / 2 - Explode.WIDTH / 2, this));
+                    explodeList.add(new Explode(tankJ.getX() + Tank.WIDTH / 2 - Explode.WIDTH / 2, tankJ.getY() + Tank.HEIGHT / 2 - Explode.HEIGHT / 2, this));
                 }
             }
         }

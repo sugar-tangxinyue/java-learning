@@ -8,7 +8,7 @@ public class Bullet {
     private Dir dir = Dir.DOWN;
     private Group group;
     //不能被改变，用final
-    private static final int SPEED = 5;
+    private static final int SPEED = Integer.parseInt(PropertyMgr.getString("bulletSpeed"));
     public static final int WIDTH = ResourceMgr.bulletD.getWidth();
     public static final int HEIGHT = ResourceMgr.bulletD.getHeight();
     private boolean living = true;

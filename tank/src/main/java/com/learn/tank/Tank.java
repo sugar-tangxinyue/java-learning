@@ -12,7 +12,7 @@ public class Tank {
     private boolean living = true;
     private TankFrame tankFrame;
     //不能被改变，用final
-    private static final int SPEED = 5;
+    private static final int SPEED = Integer.parseInt(PropertyMgr.getString("tankSpeed"));
     public static final int WIDTH = ResourceMgr.goodTankD.getWidth();
     public static final int HEIGHT = ResourceMgr.goodTankD.getWidth();
     private Rectangle rectangle = new Rectangle();
