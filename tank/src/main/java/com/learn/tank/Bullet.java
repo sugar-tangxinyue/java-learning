@@ -8,7 +8,7 @@ public class Bullet {
     private Dir dir = Dir.DOWN;
     private Group group;
     //不能被改变，用final
-    private static final int SPEED = 2;
+    private static final int SPEED = 5;
     public static final int WIDTH = ResourceMgr.bulletD.getWidth();
     public static final int HEIGHT = ResourceMgr.bulletD.getHeight();
     private boolean living = true;
@@ -118,14 +118,16 @@ public class Bullet {
      *
      * @param tank
      */
-    public void collideWith(Tank tank) {
+    public boolean collideWith(Tank tank) {
         if(this.group==tank.getGroup()){
-            return;
+            return false;
         }
         if (this.rectangle.intersects(tank.getRectangle())) {
             tank.die();
             this.die();
+            return true;
         }
+        return false;
     }
 
     /**

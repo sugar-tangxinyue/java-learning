@@ -12,9 +12,9 @@ public class Tank {
     private boolean living = true;
     private TankFrame tankFrame;
     //不能被改变，用final
-    private static final int SPEED = 2;
-    public static final int WIDTH = ResourceMgr.tankD.getWidth();
-    public static final int HEIGHT = ResourceMgr.tankD.getWidth();
+    private static final int SPEED = 5;
+    public static final int WIDTH = ResourceMgr.goodTankD.getWidth();
+    public static final int HEIGHT = ResourceMgr.goodTankD.getWidth();
     private Rectangle rectangle;
 
     private Random random=new Random();
@@ -31,26 +31,93 @@ public class Tank {
     public void paint(Graphics g) {
         if (!living) {
             tankFrame.tankList.remove(this);
+            return;
         }
-        Image image = null;
-        switch (dir) {
-            case LEFT:
-                image = ResourceMgr.tankL;
-                break;
-            case UP:
-                image = ResourceMgr.tankU;
-                break;
-            case RIGHT:
-                image = ResourceMgr.tankR;
-                break;
-            case DOWN:
-                image = ResourceMgr.tankD;
-                break;
-            default:
-                break;
-        }
-        g.drawImage(image, x, y, null);
+        randomDir();
+        g.drawImage(getImage(), x, y, null);
         move();
+    }
+
+    /**
+     * 获取图片
+     * @return
+     */
+    private Image getImage() {
+        switch (group){
+            case BAD:
+                switch (dir) {
+                    case LEFT:
+                        return ResourceMgr.badTankL;
+                    case UP:
+                        return  ResourceMgr.badTankU;
+                    case RIGHT:
+                        return  ResourceMgr.badTankR;
+                    case DOWN:
+                        return  ResourceMgr.badTankD;
+                    default:
+                        return null;
+                }
+            case GOOD:
+                switch (dir) {
+                    case LEFT:
+                        return ResourceMgr.goodTankL;
+                    case UP:
+                        return  ResourceMgr.goodTankU;
+                    case RIGHT:
+                        return  ResourceMgr.goodTankR;
+                    case DOWN:
+                        return  ResourceMgr.goodTankD;
+                    default:
+                        return null;
+                }
+            default:return null;
+        }
+    }
+
+    /**
+     * 敌机生成随机方向,如果即将超出边界，反方向运行
+     */
+    private void randomDir() {
+        if(this.group==Group.GOOD){
+           return;
+        }
+        if(x<=SPEED+Tank.HEIGHT){
+            dir=Dir.RIGHT;
+            return;
+        }
+        if(x>=TankFrame.GAME_WIDTH-SPEED-Tank.HEIGHT){
+            dir=Dir.LEFT;
+            return;
+        }
+        if(y<=SPEED+Tank.WIDTH){
+            dir=Dir.DOWN;
+            return;
+        }
+        if(y>=TankFrame.GAME_HEIGHT-SPEED-Tank.WIDTH){
+            dir=Dir.UP;
+            return;
+        }
+        int i = random.nextInt(100);
+        if(i<50){
+            return;
+        }
+        int dirQY = i % 4;
+        switch (dirQY) {
+            case 0:
+                this.dir = Dir.UP;
+                return;
+            case 1:
+                this.dir = Dir.DOWN;
+                return;
+            case 2:
+                this.dir = Dir.LEFT;
+                return;
+            case 3:
+                this.dir = Dir.RIGHT;
+                return;
+            default:
+                return;
+        }
     }
 
     /**
@@ -76,8 +143,10 @@ public class Tank {
             default:
                 break;
         }
-        if(random.nextInt(10)>8){
-            this.fire();
+        if(this.group==Group.BAD){
+            if(random.nextInt(10)>8){
+                this.fire();
+            }
         }
         this.rectangle=new Rectangle(this.x, this.y, WIDTH, HEIGHT);
     }

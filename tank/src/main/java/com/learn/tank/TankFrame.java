@@ -12,9 +12,10 @@ public class TankFrame extends Frame {
     public static final int GAME_WIDTH = 800;
     public static final int GAME_HEIGHT = 600;
 
-    Tank myTank = new Tank(200, 400, Dir.DOWN, Group.GOOD,this);
-    List<Bullet> bulletList=new ArrayList<>();
-    List<Tank> tankList=new ArrayList<>();
+    Tank myTank = new Tank(200, 400, Dir.DOWN, Group.GOOD, this);
+    List<Bullet> bulletList = new ArrayList<>();
+    List<Tank> tankList = new ArrayList<>();
+    List<Explode> explodeList = new ArrayList<>();
 
     public TankFrame() {
         //设置窗口可见
@@ -46,8 +47,15 @@ public class TankFrame extends Frame {
         }
         for (int i = 0; i < bulletList.size(); i++) {
             for (int j = 0; j < tankList.size(); j++) {
-                bulletList.get(i).collideWith(tankList.get(j));
+                Tank tankJ = tankList.get(j);
+                boolean isHit = bulletList.get(i).collideWith(tankJ);
+                if (isHit) {
+                    explodeList.add(new Explode(tankJ.getX() + Tank.WIDTH / 2, tankJ.getY() + Tank.HEIGHT / 2, this));
+                }
             }
+        }
+        for (int i = 0; i < explodeList.size(); i++) {
+            explodeList.get(i).paint(g);
         }
     }
 
