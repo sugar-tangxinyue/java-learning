@@ -1,9 +1,13 @@
 package com.learn.tank;
 
+import com.learn.tank.abstracttank.BaseTank;
+import com.learn.tank.fire.Fire;
+import com.learn.tank.fire.TankFireDefalt;
+
 import java.awt.*;
 import java.util.Random;
 
-public class Tank {
+public class Tank extends BaseTank {
     private int x;
     private int y;
     private Dir dir = Dir.DOWN;
@@ -36,6 +40,7 @@ public class Tank {
             tankFrame.tankList.remove(this);
             return;
         }
+        System.out.println("+++++++++++");
         randomDir();
         g.drawImage(getImage(), x, y, null);
         move();
@@ -86,7 +91,9 @@ public class Tank {
         if (this.group == Group.GOOD) {
             return;
         }
-        if (random.nextInt(100) > 95) {
+        int i = random.nextInt(100);
+        System.out.println(i);
+        if (i > 50) {
             this.dir = Dir.values()[random.nextInt(4)];
         }
     }
@@ -115,7 +122,7 @@ public class Tank {
                 break;
         }
         if (this.group == Group.BAD && random.nextInt(10) > 8) {
-            this.fire();
+            this.fire(TankFireDefalt.getInstance());
         }
         //边界检测
         boundsCheck();
@@ -123,11 +130,28 @@ public class Tank {
         rectangle.y = y;
     }
 
+    /**
+     * 边界检查
+     */
     private void boundsCheck() {
         if (x < 2) x = 2;
         if (y < 28) y = 28;
         if (x > TankFrame.GAME_WIDTH - Tank.WIDTH - 2) x = TankFrame.GAME_WIDTH - Tank.WIDTH - 2;
         if (y > TankFrame.GAME_HEIGHT - Tank.HEIGHT - 2) y = TankFrame.GAME_HEIGHT - Tank.HEIGHT - 2;
+    }
+
+    /**
+     * 坦克打出子弹
+     */
+    public void fire(Fire fire) {
+        fire.fire(this);
+    }
+
+    /**
+     * 坦克消失
+     */
+    public void die() {
+        this.living = false;
     }
 
     public int getX() {
@@ -178,19 +202,11 @@ public class Tank {
         this.rectangle = rectangle;
     }
 
-    /**
-     * 坦克打出子弹
-     */
-    public void fire() {
-        int bX = this.x + Tank.WIDTH / 2 - Bullet.WIDTH / 2;
-        int bY = this.y + Tank.HEIGHT / 2 - Bullet.HEIGHT / 2;
-        tankFrame.bulletList.add(new Bullet(bX, bY, this.dir, this.group, this.tankFrame));
+    public TankFrame getTankFrame() {
+        return tankFrame;
     }
 
-    /**
-     * 坦克消失
-     */
-    public void die() {
-        this.living = false;
+    public void setTankFrame(TankFrame tankFrame) {
+        this.tankFrame = tankFrame;
     }
 }

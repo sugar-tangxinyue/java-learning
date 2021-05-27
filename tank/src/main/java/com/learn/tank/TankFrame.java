@@ -1,5 +1,8 @@
 package com.learn.tank;
 
+import com.learn.tank.abstracttank.*;
+import com.learn.tank.fire.TankFireDefalt;
+
 import java.awt.*;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
@@ -9,13 +12,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class TankFrame extends Frame {
-    public static final int GAME_WIDTH = 1200;
-    public static final int GAME_HEIGHT = 900;
+    public static final int GAME_WIDTH = 1000;
+    public static final int GAME_HEIGHT = 750;
 
-    Tank myTank = new Tank(200, 400, Dir.DOWN, Group.GOOD, this);
-    List<Bullet> bulletList = new ArrayList<>();
-    List<Tank> tankList = new ArrayList<>();
-    List<Explode> explodeList = new ArrayList<>();
+    public AbstractFactory factory=new GoodTankFactory();
+    public BaseTank myTank = factory.createTank(200, 400, Dir.DOWN, Group.GOOD, this);
+    public List<BaseBullet> bulletList = new ArrayList<>();
+    public List<BaseTank> tankList = new ArrayList<>();
+    public List<BaseExplode> explodeList = new ArrayList<>();
 
     public TankFrame() {
         //设置窗口可见
@@ -57,10 +61,10 @@ public class TankFrame extends Frame {
         //碰撞
         for (int i = 0; i < bulletList.size(); i++) {
             for (int j = 0; j < tankList.size(); j++) {
-                Tank tankJ = tankList.get(j);
-                boolean isHit = bulletList.get(i).collideWith(tankJ);
+                BaseTank tankJ = tankList.get(j);
+                boolean isHit = collideWith(tankJ, bulletList.get(i));
                 if (isHit) {
-                    explodeList.add(new Explode(tankJ.getX() + Tank.WIDTH / 2 - Explode.WIDTH / 2, tankJ.getY() + Tank.HEIGHT / 2 - Explode.HEIGHT / 2, this));
+                    explodeList.add(factory.createExplode(tankJ.getX() + Tank.WIDTH / 2 - Explode.WIDTH / 2, tankJ.getY() + Tank.HEIGHT / 2 - Explode.HEIGHT / 2, this));
                 }
             }
         }
@@ -69,6 +73,24 @@ public class TankFrame extends Frame {
             explodeList.get(i).paint(g);
         }
     }
+
+    /**
+     * 坦克是否跟子弹相撞
+     *
+     * @param tank
+     */
+    public boolean collideWith(BaseTank tank, BaseBullet bullet) {
+        if (bullet.getGroup() == tank.getGroup()) {
+            return false;
+        }
+        if (bullet.getRectangle().intersects(tank.getRectangle())) {
+            tank.die();
+            bullet.die();
+            return true;
+        }
+        return false;
+    }
+
 
     /**
      * 双缓冲解决画面闪烁的问题
@@ -99,7 +121,6 @@ public class TankFrame extends Frame {
         @Override
         public void keyPressed(KeyEvent e) {
             int key = e.getKeyCode();
-            System.out.println("key pressed,the key is " + key);
             switch (key) {
                 case KeyEvent.VK_LEFT:
                     bL = true;
@@ -122,7 +143,6 @@ public class TankFrame extends Frame {
         @Override
         public void keyReleased(KeyEvent e) {
             int key = e.getKeyCode();
-            System.out.println("key released,the key is " + key);
             switch (key) {
                 case KeyEvent.VK_LEFT:
                     bL = false;
@@ -137,7 +157,7 @@ public class TankFrame extends Frame {
                     bD = false;
                     break;
                 case KeyEvent.VK_CONTROL:
-                    myTank.fire();
+                    myTank.fire(TankFireDefalt.getInstance());
                     break;
                 default:
                     break;
@@ -166,4 +186,5 @@ public class TankFrame extends Frame {
             }
         }
     }
+
 }

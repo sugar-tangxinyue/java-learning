@@ -1,19 +1,21 @@
 package com.learn.tank;
 
+import com.learn.tank.abstracttank.BaseBullet;
+
 import java.awt.*;
 
-public class Bullet {
-    private int x;
-    private int y;
-    private Dir dir = Dir.DOWN;
-    private Group group;
+public class Bullet extends BaseBullet {
+    public int x;
+    public int y;
+    public Dir dir = Dir.DOWN;
+    public Group group;
     //不能被改变，用final
     private static final int SPEED = Integer.parseInt(PropertyMgr.getString("bulletSpeed"));
     public static final int WIDTH = ResourceMgr.bulletD.getWidth();
     public static final int HEIGHT = ResourceMgr.bulletD.getHeight();
     private boolean living = true;
     private TankFrame tankFrame;
-    private Rectangle rectangle = new Rectangle();
+    public Rectangle rectangle = new Rectangle();
 
     public Bullet(int x, int y, Dir dir, Group group, TankFrame tankFrame) {
         this.x = x;
@@ -25,6 +27,7 @@ public class Bullet {
         this.rectangle.y = this.y;
         this.rectangle.width = WIDTH;
         this.rectangle.height = this.HEIGHT;
+        tankFrame.bulletList.add(this);
     }
 
     public void paint(Graphics g) {
@@ -77,6 +80,13 @@ public class Bullet {
         }
     }
 
+    /**
+     * 子弹消失
+     */
+    public void die() {
+        this.living = false;
+    }
+
     public int getX() {
         return x;
     }
@@ -115,29 +125,5 @@ public class Bullet {
 
     public void setRectangle(Rectangle rectangle) {
         this.rectangle = rectangle;
-    }
-
-    /**
-     * 坦克是否跟子弹相撞
-     *
-     * @param tank
-     */
-    public boolean collideWith(Tank tank) {
-        if (this.group == tank.getGroup()) {
-            return false;
-        }
-        if (this.rectangle.intersects(tank.getRectangle())) {
-            tank.die();
-            this.die();
-            return true;
-        }
-        return false;
-    }
-
-    /**
-     * 子弹消失
-     */
-    private void die() {
-        this.living = false;
     }
 }

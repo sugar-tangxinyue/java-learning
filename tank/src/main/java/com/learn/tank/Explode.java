@@ -1,8 +1,10 @@
 package com.learn.tank;
 
+import com.learn.tank.abstracttank.BaseExplode;
+
 import java.awt.*;
 
-public class Explode {
+public class Explode extends BaseExplode {
 
     private int x;
     private int y;
@@ -19,6 +21,7 @@ public class Explode {
 //        new Audio("audio/explode.wav").play();
     }
 
+    @Override
     public void paint(Graphics g) {
         if (step >= ResourceMgr.explodes.length) {
             tankFrame.explodeList.remove(this);

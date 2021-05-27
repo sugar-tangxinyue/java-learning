@@ -32,7 +32,8 @@ public class ResourceMgr {
             for (int i = 0; i < 16; i++)
                 explodes[i] = ImageIO.read(ResourceMgr.class.getClassLoader().getResourceAsStream("images/e" + (i + 1) + ".gif"));
         } catch (IOException e) {
-            e.printStackTrace();
+            System.out.println(e.getMessage());
+            System.out.println(e);
         }
     }
 }
