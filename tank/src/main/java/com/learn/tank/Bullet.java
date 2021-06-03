@@ -2,7 +2,7 @@ package com.learn.tank;
 
 import java.awt.*;
 
-public class Bullet {
+public class Bullet extends GameObject {
     private int x;
     private int y;
     private Dir dir = Dir.DOWN;
@@ -12,24 +12,23 @@ public class Bullet {
     public static final int WIDTH = ResourceMgr.bulletD.getWidth();
     public static final int HEIGHT = ResourceMgr.bulletD.getHeight();
     private boolean living = true;
-    private TankFrame tankFrame;
     private Rectangle rectangle = new Rectangle();
 
-    public Bullet(int x, int y, Dir dir, Group group, TankFrame tankFrame) {
+    public Bullet(int x, int y, Dir dir, Group group) {
         this.x = x;
         this.y = y;
         this.dir = dir;
         this.group = group;
-        this.tankFrame = tankFrame;
-        this.rectangle.x = this.x;
-        this.rectangle.y = this.y;
+        this.rectangle.x = x;
+        this.rectangle.y = y;
         this.rectangle.width = WIDTH;
         this.rectangle.height = this.HEIGHT;
+        GameModel.gameObjectList.add(this);
     }
 
     public void paint(Graphics g) {
         if (!living) {
-            tankFrame.bulletList.remove(this);
+            GameModel.gameObjectList.remove(this);
         }
         Image image = null;
         switch (dir) {
@@ -117,27 +116,11 @@ public class Bullet {
         this.rectangle = rectangle;
     }
 
-    /**
-     * 坦克是否跟子弹相撞
-     *
-     * @param tank
-     */
-    public boolean collideWith(Tank tank) {
-        if (this.group == tank.getGroup()) {
-            return false;
-        }
-        if (this.rectangle.intersects(tank.getRectangle())) {
-            tank.die();
-            this.die();
-            return true;
-        }
-        return false;
-    }
 
     /**
      * 子弹消失
      */
-    private void die() {
+    public void die() {
         this.living = false;
     }
 }

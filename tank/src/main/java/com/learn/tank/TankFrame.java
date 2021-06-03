@@ -5,17 +5,10 @@ import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
-import java.util.ArrayList;
-import java.util.List;
 
 public class TankFrame extends Frame {
-    public static final int GAME_WIDTH = 1200;
-    public static final int GAME_HEIGHT = 900;
-
-    Tank myTank = new Tank(200, 400, Dir.DOWN, Group.GOOD, this);
-    List<Bullet> bulletList = new ArrayList<>();
-    List<Tank> tankList = new ArrayList<>();
-    List<Explode> explodeList = new ArrayList<>();
+    public static final int GAME_WIDTH = 1000;
+    public static final int GAME_HEIGHT = 750;
 
     public TankFrame() {
         //设置窗口可见
@@ -38,36 +31,7 @@ public class TankFrame extends Frame {
     //坦克坐标变成变量，可以动起来
     @Override
     public void paint(Graphics g) {
-        Color c = g.getColor();
-        g.setColor(Color.WHITE);
-        g.drawString("bullets:" + bulletList.size(), 10, 60);
-        g.drawString("tanks:" + tankList.size(), 10, 80);
-        g.drawString("explodes" + explodeList.size(), 10, 100);
-        g.setColor(c);
-        //画坦克
-        myTank.paint(g);
-        //画出子弹
-        for (int i = 0; i < bulletList.size(); i++) {
-            bulletList.get(i).paint(g);
-        }
-        //画出敌方坦克
-        for (int i = 0; i < tankList.size(); i++) {
-            tankList.get(i).paint(g);
-        }
-        //碰撞
-        for (int i = 0; i < bulletList.size(); i++) {
-            for (int j = 0; j < tankList.size(); j++) {
-                Tank tankJ = tankList.get(j);
-                boolean isHit = bulletList.get(i).collideWith(tankJ);
-                if (isHit) {
-                    explodeList.add(new Explode(tankJ.getX() + Tank.WIDTH / 2 - Explode.WIDTH / 2, tankJ.getY() + Tank.HEIGHT / 2 - Explode.HEIGHT / 2, this));
-                }
-            }
-        }
-        //画出爆炸
-        for (int i = 0; i < explodeList.size(); i++) {
-            explodeList.get(i).paint(g);
-        }
+        GameModel.getInstance().paint(g);
     }
 
     /**
@@ -99,7 +63,7 @@ public class TankFrame extends Frame {
         @Override
         public void keyPressed(KeyEvent e) {
             int key = e.getKeyCode();
-            System.out.println("key pressed,the key is " + key);
+//            System.out.println("key pressed,the key is " + key);
             switch (key) {
                 case KeyEvent.VK_LEFT:
                     bL = true;
@@ -122,7 +86,7 @@ public class TankFrame extends Frame {
         @Override
         public void keyReleased(KeyEvent e) {
             int key = e.getKeyCode();
-            System.out.println("key released,the key is " + key);
+//            System.out.println("key released,the key is " + key);
             switch (key) {
                 case KeyEvent.VK_LEFT:
                     bL = false;
@@ -136,8 +100,8 @@ public class TankFrame extends Frame {
                 case KeyEvent.VK_DOWN:
                     bD = false;
                     break;
-                case KeyEvent.VK_CONTROL:
-                    myTank.fire();
+                case 157:
+                    GameModel.getInstance().myTank.fire();
                     break;
                 default:
                     break;
@@ -147,21 +111,20 @@ public class TankFrame extends Frame {
 
         private void setMainTankDir() {
             if (!bL && !bR && !bD && !bU) {
-                myTank.setMoving(false);
+                GameModel.getInstance().myTank.setMoving(false);
             } else {
-                myTank.setMoving(true);
-
+                GameModel.getInstance().myTank.setMoving(true);
                 if (bL) {
-                    myTank.setDir(Dir.LEFT);
+                    GameModel.getInstance().myTank.setDir(Dir.LEFT);
                 }
                 if (bU) {
-                    myTank.setDir(Dir.UP);
+                    GameModel.getInstance().myTank.setDir(Dir.UP);
                 }
                 if (bR) {
-                    myTank.setDir(Dir.RIGHT);
+                    GameModel.getInstance().myTank.setDir(Dir.RIGHT);
                 }
                 if (bD) {
-                    myTank.setDir(Dir.DOWN);
+                    GameModel.getInstance().myTank.setDir(Dir.DOWN);
                 }
             }
         }

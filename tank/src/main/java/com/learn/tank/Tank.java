@@ -3,14 +3,15 @@ package com.learn.tank;
 import java.awt.*;
 import java.util.Random;
 
-public class Tank {
+public class Tank extends GameObject {
     private int x;
     private int y;
+    private int oldX;
+    private int oldY;
     private Dir dir = Dir.DOWN;
     private Group group;
     private boolean moving = true;
     private boolean living = true;
-    private TankFrame tankFrame;
     //不能被改变，用final
     private static final int SPEED = Integer.parseInt(PropertyMgr.getString("tankSpeed"));
     public static final int WIDTH = ResourceMgr.goodTankD.getWidth();
@@ -19,21 +20,23 @@ public class Tank {
 
     private Random random = new Random();
 
-    public Tank(int x, int y, Dir dir, Group group, TankFrame tankFrame) {
+    public Tank(int x, int y, Dir dir, Group group) {
         this.x = x;
         this.y = y;
         this.dir = dir;
         this.group = group;
-        this.tankFrame = tankFrame;
-        this.rectangle.x = this.x;
-        this.rectangle.y = this.y;
+        this.rectangle.x = x;
+        this.rectangle.y = y;
+        this.oldX = x;
+        this.oldY = y;
         this.rectangle.width = WIDTH;
         this.rectangle.height = this.HEIGHT;
+        GameModel.gameObjectList.add(this);
     }
 
     public void paint(Graphics g) {
         if (!living) {
-            tankFrame.tankList.remove(this);
+            GameModel.gameObjectList.remove(this);
             return;
         }
         randomDir();
@@ -95,6 +98,8 @@ public class Tank {
      * 子弹移动
      */
     private void move() {
+        this.oldX = x;
+        this.oldY = y;
         if (!moving) {
             return;
         }
@@ -128,6 +133,27 @@ public class Tank {
         if (y < 28) y = 28;
         if (x > TankFrame.GAME_WIDTH - Tank.WIDTH - 2) x = TankFrame.GAME_WIDTH - Tank.WIDTH - 2;
         if (y > TankFrame.GAME_HEIGHT - Tank.HEIGHT - 2) y = TankFrame.GAME_HEIGHT - Tank.HEIGHT - 2;
+    }
+
+    /**
+     * 坦克打出子弹
+     */
+    public void fire() {
+        int bX = this.x + Tank.WIDTH / 2 - Bullet.WIDTH / 2;
+        int bY = this.y + Tank.HEIGHT / 2 - Bullet.HEIGHT / 2;
+        new Bullet(bX, bY, this.dir, this.group);
+    }
+
+    /**
+     * 坦克消失
+     */
+    public void die() {
+        this.living = false;
+    }
+
+    public void back() {
+        x = this.oldX;
+        y = this.oldY;
     }
 
     public int getX() {
@@ -176,21 +202,5 @@ public class Tank {
 
     public void setRectangle(Rectangle rectangle) {
         this.rectangle = rectangle;
-    }
-
-    /**
-     * 坦克打出子弹
-     */
-    public void fire() {
-        int bX = this.x + Tank.WIDTH / 2 - Bullet.WIDTH / 2;
-        int bY = this.y + Tank.HEIGHT / 2 - Bullet.HEIGHT / 2;
-        tankFrame.bulletList.add(new Bullet(bX, bY, this.dir, this.group, this.tankFrame));
-    }
-
-    /**
-     * 坦克消失
-     */
-    public void die() {
-        this.living = false;
     }
 }
